@@ -23,9 +23,6 @@
   <div id="map" style="width: 100%; height: 100%; background: #6d7993;"></div>
 
   <script type="text/javascript">
-  
-  
-  
     // Initialize the map
     var map = L.map('map').setView([0, 0], 0);
     L.tileLayer('map/{z}/{x}/{y}.png', {
@@ -39,8 +36,6 @@
 	<!-- Map Boundies -->
 	//var mapSW = [-84,-109], mapNE = [83.5,123.5];
 	//map.setMaxBounds(new L.LatLngBounds(mapSW, mapNE));	
-	
-	
 	
 	// Custom control for displaying an image in a popup
 	var ImagePopoutControl = L.Control.extend({
@@ -103,11 +98,6 @@
 	// Add the new control to the map
 	map.addControl(new ImagePopoutControl({ position: 'topleft' }));
 
-
-
-
-
-
 	
 	// Custom control for hiding/showing all markers
 	var HideShowControl = L.Control.extend({
@@ -157,8 +147,6 @@
 	// Add the new control to the map
 	map.addControl(new HideShowControl({ position: 'topright' }));
 
-	
-	
 	
     // Define Icons for different locations
     var Base = L.icon({
@@ -338,15 +326,6 @@
 	}
 
 	
-	
-	
-	
-	var mistshore = L.polygon([[-45.5, -55], [-43, -48], [-44, -42.5], [-44, -36], [-47, -34], [-51, -39], [-52, -46], [-51, -51.5], [-47, -55]], {
-	color: 'red', title: "Mistshore", icon: Places_Streets, opacity: 0.3})
-	.bindPopup('<b>Mistshore</b><br><i>Dock Ward</i><p>A dangerous place filled with smugglers and criminals.</p><img src="images/mistshore.png" style="width:100%;max-width:300px;">')
-	.bindTooltip('Mistshore', {permanent: false, direction: 'top'})
-	.addTo(map);
-	
 	// Create layer groups
 	var mg_base = L.layerGroup().addTo(map);
 	var mg_city_building = L.layerGroup().addTo(map);
@@ -361,38 +340,58 @@
 	var mg_places_streets = L.layerGroup().addTo(map);
 	var mg_miscellaneous = L.layerGroup().addTo(map);
 	
+locations.forEach(function(location) {
+  // Create the formatted header using the location name, area (if available), and ward
+  var header = '<b>' + location.name + '</b><br>';
+  if (location.area) {
+    header += '<i>' + location.area + ', ' + location.ward + '</i><p>';
+  } else {
+    header += '<i>' + location.ward + '</i><p>';
+  }
 
-	// Create location markers
-	locations.forEach(function(location) {
-	  // Create the formatted header using the location name and ward
-	  // var header = '<b>' + location.name + '</b><br><i>' + location.area + ', ' + location.ward + '</i><p>';
-	  var header = '<b>' + location.name + '</b><br>';
-	  if (location.area) {
-		header += '<i>' + location.area + ', ' + location.ward + '</i><p>';
-	  } else {
-		header += '<i>' + location.ward + '</i><p>';
-	  }
-  
-	  // Concatenate the header with the existing description
-	  var popupContent = header + location.description + 
-						 '<br><img src="' + location.image + '" style="width:100%;max-width:300px;">';
+  // Concatenate the header with the existing description
+  var popupContent = header + location.description + 
+                     '<br><img src="' + location.image + '" style="width:100%;max-width:300px;">';
 
-	  var iconName = location.type[0].replace(/ /g, '_');
-	  var icon = window[iconName] || Miscellaneous; // Use Miscellaneous as default if icon not found
+  if (location.isPolygon) {
+    // If the location is a polygon, create a polygon
+    var polygon = L.polygon(location.coordinates, {
+      color: 'red',
+      title: location.name,
+      icon: window.Places_Streets, // Assuming the default icon for polygons is Places_Streets
+      opacity: 0.3
+    })
+    .bindPopup(popupContent)
+    .bindTooltip(location.name, {permanent: false, direction: 'top'})
+    .addTo(map);
 
-	  var marker = L.marker(location.coordinates, {icon: icon, title: location.name})
-		.bindPopup(popupContent)
-		.bindTooltip(location.name, {permanent: false, direction: 'top'})
-		.addTo(searchableLayer);
+    // Add the polygon to all appropriate layer groups
+    location.type.forEach(function(type) {
+      var groupName = type.toLowerCase().replace(/[,&]/g, '').replace(/ /g, '_');
+      if (window['mg_' + groupName]) {
+        window['mg_' + groupName].addLayer(polygon);
+      }
+    });
+  } else {
+    // If the location is not a polygon, create a marker
+    var iconName = location.type[0].replace(/ /g, '_');
+    var icon = window[iconName] || Miscellaneous; // Use Miscellaneous as default if icon not found
 
-	  // Add the marker to all appropriate layer groups
-	  location.type.forEach(function(type) {
-		var groupName = type.toLowerCase().replace(/[,&]/g, '').replace(/ /g, '_');
-		if (window['mg_' + groupName]) {
-		  window['mg_' + groupName].addLayer(marker);
-		}
-	  });
-	});
+    var marker = L.marker(location.coordinates, {icon: icon, title: location.name})
+      .bindPopup(popupContent)
+      .bindTooltip(location.name, {permanent: false, direction: 'top'})
+      .addTo(searchableLayer);
+
+    // Add the marker to all appropriate layer groups
+    location.type.forEach(function(type) {
+      var groupName = type.toLowerCase().replace(/[,&]/g, '').replace(/ /g, '_');
+      if (window['mg_' + groupName]) {
+        window['mg_' + groupName].addLayer(marker);
+      }
+    });
+  }
+});
+
 
 
 
@@ -440,8 +439,6 @@
 	  }
 	});
 	map.addControl(searchControl);
-
-	
 
   </script>
 </body>

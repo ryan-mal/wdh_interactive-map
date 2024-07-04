@@ -30,8 +30,18 @@ var locations = [
         notableInfo: ""
     },
 
+    {
+        name: "Mistshore",
+        area: "",
+        ward: "Dock Ward",
+        type: ["Place", "Streets"],
+        coordinates: [[-45.5, -55], [-43, -48], [-44, -42.5], [-44, -36], [-47, -34], [-51, -39], [-52, -46], [-51, -51.5], [-47, -55]], // Polygon coordinates
+        image: "images/mistshore.png",
+        description: "A dangerous place filled with smugglers and criminals.",
+        notableInfo: "",
+        isPolygon: true // Indicate that this location is a polygon
+    }
 
-    
     // Add all other locations here...
 ];
 
