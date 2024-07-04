@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html style="height: 100%;">
 <head>
-  <!-- Page Title -->
   <title>Waterdeep Map</title>
-
-  <!-- Responsive design meta tag -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Stylesheets -->
@@ -17,27 +14,34 @@
   <script src="scripts/leaflet-search.min.js"></script>
 </head>
 
-
 <body style="height: 100%; margin: 0;">
   <!-- Map Container -->
   <div id="map" style="width: 100%; height: 100%; background: #6d7993;"></div>
 
   <script type="text/javascript">
-    // Initialize the map
-    var map = L.map('map').setView([0, 0], 0);
-    L.tileLayer('map/{z}/{x}/{y}.png', {
-      continuousWorld: false,
-      noWrap: true,  
-      minZoom: 2,
-      maxZoom: 6,
-    }).addTo(map);
     
-    map.setView([62.714462, 21.291504], 4);
-	<!-- Map Boundies -->
+	// Initialize the map
+	var map = L.map('map').setView([0, 0], 0);
+	L.tileLayer('map/{z}/{x}/{y}.png', {
+		continuousWorld: false,
+		noWrap: true,
+		minZoom: 2,
+		maxZoom: 6,
+	}).addTo(map);
+
+	map.setView([62.714462, 21.291504], 4);
+
+	// Map Boundaries (currently commented out)
 	//var mapSW = [-84,-109], mapNE = [83.5,123.5];
 	//map.setMaxBounds(new L.LatLngBounds(mapSW, mapNE));	
-	
-	// Custom control for displaying an image in a popup
+
+	// Create URL hash for popout
+	function generateHash(str) {
+		return encodeURIComponent(str.toLowerCase().replace(/\s+/g, '-'));
+	}
+
+
+	// Image Popout Control
 	var ImagePopoutControl = L.Control.extend({
 		onAdd: function(map) {
 			var container = L.DomUtil.create('div', 'leaflet-control leaflet-bar');
@@ -81,7 +85,6 @@
 					popoutDiv = null;
 				}
 			};
-
 			// Global click listener to close the popout
 			document.addEventListener('click', function(event) {
 				if (popoutDiv && !popoutDiv.contains(event.target) && !button.contains(event.target)) {
@@ -94,12 +97,12 @@
 			return container;
 		},
 	});
+	map.addControl(new ImagePopoutControl({
+		position: 'topleft'
+	}));
 
-	// Add the new control to the map
-	map.addControl(new ImagePopoutControl({ position: 'topleft' }));
 
-	
-	// Custom control for hiding/showing all markers
+	// Hide/Show Markers Control
 	var HideShowControl = L.Control.extend({
 		onAdd: function(map) {
 			var container = L.DomUtil.create('div', 'leaflet-control leaflet-bar');
@@ -107,17 +110,17 @@
 
 			// Set initial background image to 'show.png'
 			button.style.backgroundImage = "url('scripts/images/show.png')";
-			button.style.backgroundSize = 'contain';  // Ensure the icon size fits the button
+			button.style.backgroundSize = 'contain'; // Ensure the icon size fits the button
 			button.style.backgroundRepeat = 'no-repeat';
 			button.style.backgroundPosition = 'center';
 			button.href = '#';
-			button.style.width = '30px';  // Adjust width as needed
-			button.style.height = '30px';  // Adjust height as needed
-			button.style.display = 'block';  // Changed from 'marker' to 'inline-block'
+			button.style.width = '30px'; // Adjust width as needed
+			button.style.height = '30px'; // Adjust height as needed
+			button.style.display = 'block';
 
 			button.onclick = function() {
 				console.log('Toggle Visibility');
-				toggleMarkers(button);  // Pass the button element to the function
+				toggleMarkers(button); // Pass the button element to the function
 				return false;
 			};
 
@@ -125,7 +128,7 @@
 		}
 	});
 
-	// Function to toggle markers and switch icons
+	// Toggle Markers Function
 	var markersVisible = true;
 
 	function toggleMarkers(button) {
@@ -133,21 +136,21 @@
 			for (var layer in overlays) {
 				map.removeLayer(overlays[layer]);
 			}
-			button.style.backgroundImage = "url('scripts/images/hide.png')";  // Change to 'hide.png'
+			button.style.backgroundImage = "url('scripts/images/hide.png')"; // Change to 'hide.png'
 			markersVisible = false;
 		} else {
 			for (var layer in overlays) {
 				map.addLayer(overlays[layer]);
 			}
-			button.style.backgroundImage = "url('scripts/images/show.png')";  // Change back to 'show.png'
+			button.style.backgroundImage = "url('scripts/images/show.png')"; // Change back to 'show.png'
 			markersVisible = true;
 		}
 	}
+	map.addControl(new HideShowControl({
+		position: 'topright'
+	}));
 
-	// Add the new control to the map
-	map.addControl(new HideShowControl({ position: 'topright' }));
 
-	
 	// Define a function to create icons
 	function createIcon(iconName) {
 		return L.icon({
@@ -165,17 +168,17 @@
 	// Define icon configurations
 	const iconConfigs = {
 		Base: 'base',
-		Academy: 'academy',
-		Business: 'businesses',
 		City_Building: 'city_building',
-		Guildhall: 'guildhall',
-		Noble_Villa: 'noble_villa',
-		Residence: 'residence',
-		Places_Streets: 'streets',
-		Inn_Tavern_Festhall: 'tavern',
-		Miscellaneous: 'miscellaneous',
+		Academy: 'academy',
 		Temple: 'temple',
-		Warehouse: 'warehouse'
+		Warehouse: 'warehouse',
+		Residence: 'residence',
+		Business: 'businesses',
+		Guildhall: 'guildhall',
+		Inn_Tavern_Festhall: 'inn_tavern_festhall',
+		Noble_Villa: 'noble_villa',
+		Places_Streets: 'places_streets',
+		Miscellaneous: 'miscellaneous'
 	};
 
 	// Generate icons
@@ -184,33 +187,33 @@
 		icons[iconName] = createIcon(fileName);
 	}
 
+	// Draggable marker for coordinate finding (comment out when not in use)
+	var marker = L.marker([0, 0], {
+		draggable: true,
+	}).addTo(map);
+	marker.bindPopup('LatLng Marker').openPopup();
+	marker.on('dragend', function(e) {
+		marker.getPopup().setContent(marker.getLatLng().toString()).openOn(map);
+	});
 
-	
-	
-	// Draggable marker for coordinate finding. Comment this out when  not in use
-    var marker = L.marker([0, 0], {
-      draggable: true,
-    }).addTo(map);
-    marker.bindPopup('LatLng Marker').openPopup();
-    marker.on('dragend', function(e) {
-      marker.getPopup().setContent(marker.getLatLng().toString()).openOn(map);
-    });
-	
-    // Layer for searchable markers
-    var searchableLayer = L.layerGroup().addTo(map);
+	// Layer for searchable markers
+	var searchableLayer = L.layerGroup().addTo(map);
 
 
 	// Create ward polygons
 	wards.forEach(function(ward) {
 		var polygon = L.polygon(ward.coordinates, {
-			color: ward.color,
-			fillColor: ward.fillColor,
-			opacity: ward.opacity,
-			fillOpacity: ward.fillOpacity
-		})
-		.bindPopup(ward.popupContent)
-		.bindTooltip(ward.tooltipContent, { permanent: false, direction: 'top' })
-		.addTo(map);
+				color: ward.color,
+				fillColor: ward.fillColor,
+				opacity: ward.opacity,
+				fillOpacity: ward.fillOpacity
+			})
+			.bindPopup(ward.popupContent)
+			.bindTooltip(ward.tooltipContent, {
+				permanent: false,
+				direction: 'top'
+			})
+			.addTo(map);
 
 		setupHoverEffects(polygon);
 	});
@@ -230,7 +233,7 @@
 		});
 	}
 
-	
+
 	// Create layer groups
 	var mg_base = L.layerGroup().addTo(map);
 	var mg_city_building = L.layerGroup().addTo(map);
@@ -244,107 +247,146 @@
 	var mg_noble_villa = L.layerGroup().addTo(map);
 	var mg_places_streets = L.layerGroup().addTo(map);
 	var mg_miscellaneous = L.layerGroup().addTo(map);
-	
-locations.forEach(function(location) {
-  // Create the formatted header using the location name, area (if available), and ward
-  var header = '<b>' + location.name + '</b><br>';
-  if (location.area) {
-    header += '<i>' + location.area + ', ' + location.ward + '</i><p>';
-  } else {
-    header += '<i>' + location.ward + '</i><p>';
-  }
 
-  // Concatenate the header with the existing description
-  var popupContent = header + location.description + 
-                     '<br><img src="' + location.image + '" style="width:100%;max-width:300px;">';
+	// Create markers and polygons for locations
+	locations.forEach(function(location) {
+		// Create the formatted header using the location name, area (if available), and ward
+		var header = '<b>' + location.name + '</b><br>';
+		if (location.area) {
+			header += '<i>' + location.area + ', ' + location.ward + '</i><p>';
+		} else {
+			header += '<i>' + location.ward + '</i><p>';
+		}
 
-  if (location.isPolygon) {
-    // If the location is a polygon, create a polygon
-    var polygon = L.polygon(location.coordinates, {
-      color: 'red',
-      title: location.name,
-      icon: icons.Places_Streets, // Assuming the default icon for polygons is Places_Streets
-      opacity: 0.3
-    })
-    .bindPopup(popupContent)
-    .bindTooltip(location.name, {permanent: false, direction: 'top'})
-    .addTo(map);
+		// Concatenate the header with the existing description
+		var hash = generateHash(location.name);
+		var popupContent = header + location.description + '<br><img src="' + location.image + '" style="width:100%;max-width:300px;">';
 
-    // Add the polygon to all appropriate layer groups
-    location.type.forEach(function(type) {
-      var groupName = type.toLowerCase().replace(/[,&]/g, '').replace(/ /g, '_');
-      if (window['mg_' + groupName]) {
-        window['mg_' + groupName].addLayer(polygon);
-      }
-    });
-  } else {
-    // If the location is not a polygon, create a marker
-	var iconName = location.type[0].replace(/ /g, '_');
-	var icon = icons[iconName] || icons.Miscellaneous; // Use Miscellaneous as default if icon not found
+		if (location.isPolygon) {
+			// If the location is a polygon, create a polygon
+			var polygon = L.polygon(location.coordinates, {
+					color: 'red',
+					title: location.name,
+					icon: icons.Places_Streets, // Assuming the default icon for polygons is Places_Streets
+					opacity: 0.3
+			})
+			.bindPopup(popupContent)
+			.bindTooltip(location.name, {
+				permanent: false,
+				direction: 'top'
+			})
+			.addTo(map);
 
-	var marker = L.marker(location.coordinates, {icon: icon, title: location.name})
-	  .bindPopup(popupContent)
-	  .bindTooltip(location.name, {permanent: false, direction: 'top'})
-	  .addTo(searchableLayer);
+			// Add the polygon to all appropriate layer groups
+			location.type.forEach(function(type) {
+				var groupName = type.toLowerCase().replace(/[,&]/g, '').replace(/ /g, '_');
+				if (window['mg_' + groupName]) {
+					window['mg_' + groupName].addLayer(polygon);
+				}
+				
+			});
+			polygon.on('popupopen', function() {
+				window.history.replaceState(null, null, '#' + hash);
+			});
+			polygon.on('popupclose', function() {
+				window.history.replaceState(null, null, window.location.pathname);
+			});
+		} else {
+			// If the location is not a polygon, create a marker
+			var iconName = location.type[0].replace(/ /g, '_');
+			var icon = icons[iconName] || icons.Miscellaneous; // Use Miscellaneous as default if icon not found
 
-    // Add the marker to all appropriate layer groups
-    location.type.forEach(function(type) {
-      var groupName = type.toLowerCase().replace(/[,&]/g, '').replace(/ /g, '_');
-      if (window['mg_' + groupName]) {
-        window['mg_' + groupName].addLayer(marker);
-      }
-    });
-  }
-});
+			var marker = L.marker(location.coordinates, {
+				icon: icon,
+				title: location.name
+			})
+			.bindPopup(popupContent)
+			.bindTooltip(location.name, {
+				permanent: false,
+				direction: 'top'
+			})
+			.addTo(searchableLayer)
+			.on('popupopen', function() {
+				window.location.hash = hash;
+			});
+			
+			marker.on('popupopen', function() {
+				window.history.replaceState(null, null, '#' + hash);
+			});
+			marker.on('popupclose', function() {
+				window.history.replaceState(null, null, window.location.pathname);
+			});
 
-
+			// Add the marker to all appropriate layer groups
+			location.type.forEach(function(type) {
+				var groupName = type.toLowerCase().replace(/[,&]/g, '').replace(/ /g, '_');
+				if (window['mg_' + groupName]) {
+					window['mg_' + groupName].addLayer(marker);
+				}
+			});
+		}
+	// Store the marker/polygon reference with its hash
+	window.markerHashes = window.markerHashes || {};
+	window.markerHashes[hash] = location.isPolygon ? polygon : marker;
+	});
 
 
 	// Overlay groups for different types of locations
 	var overlays = {
-	  "Bases" : mg_base,
-	  "City Buildings" : mg_city_building,
-	  "Academies" : mg_academy,
-	  "Temples" : mg_temple,
-	  "Warehouses" : mg_warehouse,
-	  "Residences" : mg_residence,
-	  "Businesses" : mg_business,
-	  "Guildhalls" : mg_guildhall,
-	  "Inns, Taverns, Festhalls" : mg_inn_tavern_festhall,
-	  "Noble Villas" : mg_noble_villa,
-	  "Places & Streets" : mg_places_streets,
-	  "Miscellaneous" : mg_miscellaneous,
+		"Bases": mg_base,
+		"City Buildings": mg_city_building,
+		"Academies": mg_academy,
+		"Temples": mg_temple,
+		"Warehouses": mg_warehouse,
+		"Residences": mg_residence,
+		"Businesses": mg_business,
+		"Guildhalls": mg_guildhall,
+		"Inns, Taverns, Festhalls": mg_inn_tavern_festhall,
+		"Noble Villas": mg_noble_villa,
+		"Places & Streets": mg_places_streets,
+		"Miscellaneous": mg_miscellaneous,
 	};
 
-    // Layer control for toggling overlays
-    L.control.layers(null, overlays).addTo(map);
-	
-  
-    // Search control
-	var searchControl = new L.Control.Search({
-	  layer: searchableLayer,
-	  propertyName: 'title',
-	  marker: false,
-	  moveToLocation: function(latlng, title, map) {
-		// Loop through all overlay groups to find the marker
-		for (var groupName in overlays) {
-		  var group = overlays[groupName];
-		  var marker = group.getLayers().find(layer => layer.options.title === title);
+	// Layer control for toggling overlays
+	L.control.layers(null, overlays).addTo(map);
 
-		  // If marker is found within this group
-		  if(marker) {
-			if (!map.hasLayer(group)) {
-			  map.addLayer(group); // Enable the group if it's not already active
+
+	// Search control
+	var searchControl = new L.Control.Search({
+		layer: searchableLayer,
+		propertyName: 'title',
+		marker: false,
+		moveToLocation: function(latlng, title, map) {
+			// Loop through all overlay groups to find the marker
+			for (var groupName in overlays) {
+				var group = overlays[groupName];
+				var marker = group.getLayers().find(layer => layer.options.title === title);
+
+				// If marker is found within this group
+				if (marker) {
+					if (!map.hasLayer(group)) {
+						map.addLayer(group); // Enable the group if it's not already active
+					}
+					map.setView(latlng, 17); // Set view and zoom level
+					marker.openPopup(); // Open the popup for the marker
+					break; // Stop the loop as we found our marker
+				}
 			}
-			map.setView(latlng, 17); // Set view and zoom level
-			marker.openPopup(); // Open the popup for the marker
-			break; // Stop the loop as we found our marker
-		  }
 		}
-	  }
 	});
 	map.addControl(searchControl);
+	
+	function openPopupFromHash() {
+		var hash = decodeURIComponent(window.location.hash.substr(1));
+		if (hash && window.markerHashes[hash]) {
+			var marker = window.markerHashes[hash];
+			marker.openPopup();
+			map.panTo(marker.getLatLng ? marker.getLatLng() : marker.getBounds().getCenter());
+		}
+	}
 
+	map.whenReady(openPopupFromHash);
+	window.addEventListener('hashchange', openPopupFromHash);
   </script>
 </body>
 </html>
