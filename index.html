@@ -32,6 +32,8 @@
 	}).addTo(map);
 
 	map.setView([62.714462, 21.291504], 4);
+	
+	// window.distanceMode = false;
 
 	// Map Boundaries (currently commented out)
 	//var mapSW = [-84,-109], mapNE = [83.5,123.5];
@@ -435,16 +437,47 @@ function openPopupFromHash() {
 
 	map.whenReady(openPopupFromHash);
 	window.addEventListener('hashchange', openPopupFromHash);
- 
- 
- </script>
-  
-	<div id="distance-control" class="leaflet-control leaflet-bar" style="background: white; padding: 10px; margin: 10px;">
-		<h4>Distance Calculator</h4>
-		<button id="start-distance">Start Measuring</button>
-		<button id="clear-distance" style="display: none;">Clear</button>
-		<p id="distance-result"></p>
-	</div>
-  
+
+    // Modify click handlers for markers and wards
+    function onMarkerClick(e) {
+        if (!window.distanceMode) {
+            // Your existing marker click logic here
+            this.openPopup();
+        }
+    }
+
+    function onWardClick(e) {
+        if (!window.distanceMode) {
+            // Your existing ward click logic here
+            this.openPopup();
+        }
+    }
+
+    // Update all markers and polygons to use these new click handlers
+    searchableLayer.eachLayer(function(layer) {
+        layer.off('click');
+        layer.on('click', onMarkerClick);
+    });
+
+	wards.forEach(function(ward) {
+		ward.off('click', onWardClick);
+		ward.on('click', onWardClick);
+	});
+  </script>
+
+  <div id="distance-control" class="leaflet-control leaflet-bar">
+    <h4>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 5px;">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      Trail Tracker
+    </h4>
+    <button id="start-distance">Start Tracking</button>
+    <button id="clear-distance" style="display: none;">Clear Trail</button>
+    <p id="distance-result"></p>
+  </div>
+
+  <script src="scripts/distance-tracker.js"></script>
 </body>
 </html>
