@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="scripts/updated-leaflet-search.min.css">
 
   <!-- JavaScript Libraries -->
+  <script src="data/locations.js"></script>
   <script src="scripts/leaflet.js"></script>
   <script src="scripts/leaflet-search.min.js"></script>
   
@@ -584,70 +585,20 @@
 	
 	
 	
-	var nw_tsm = L.marker([62.714462, 21.291504], {icon: Base, title: "Trollskull Manor"})
-	.bindPopup('<b>Trollskull Manor</b><br><i>Trollskull Alley, North Ward</i><p>Four stories tall and boasting balconies, a turret, and five chimneys, this Manorial House and Tavern was once one of the grandest estates in Trollskull Alley. It is now nothing more than a crumbling memory.</p><img src="images/trollskull_manor.png" style="width:100%;max-width:300px;">')
-	.bindTooltip('Trollskull Manor', {permanent: false, direction: 'top'})
-	.addTo(searchableLayer);
+	locations.forEach(function(location) {
+	  var popupContent = location.description + 
+						 '<br><img src="' + location.image + '" style="width:100%;max-width:300px;">';
 
-	var cw_btower = L.marker([29.113775, -39.023438], {icon: Academy, title: "Blackstaff Tower"})
-	.bindPopup('<b>Blackstaff Tower</b><br><i>Blackstaff Academy, Castle Ward</i><p>Previously known as Arunsun Tower, Blackstaff Tower stands proud as the Blackstaff Academys main library, and the headquaters of the Grey Hands. The tower was the home of Khelben "Blackstaff" Arunsun as well as of his successors to the title of Blackstaff. The foreboding structure, made of smooth black onyx, is one of Waterdeep&#39s most recognizable landmarks.</p><img src="images/blackstaff_tower.png" style="width:100%;max-width:300px;">')
-	.bindTooltip('Blackstaff Tower', {permanent: false, direction: 'top'})
-	.addTo(searchableLayer);
+	  var marker = L.marker(location.coordinates, {icon: window[location.type[0]], title: location.name})
+		.bindPopup(popupContent)
+		.bindTooltip(location.name, {permanent: false, direction: 'top'})
+		.addTo(searchableLayer);
 
-	var cw_awcms = L.marker([30.145127, -31.508789], {icon: Miscellaneous, title: "Archway Commons"})
-	.bindPopup('<b>Archway Commons</b><br><i>Blackstaff Academy, Castle Ward</i><p>Just east of Blackstaff Tower lies one of Waterdeeps few public parks. More familiarly called the Commons, the lush park is a favourite spot for students of Blackstaff Academy to gather in fair weather or to wander through on dates. Standing proud at its centre is a statue of Khelben Arunsun, the first Blackstaff.</p><img src="images/archway_commons.png" style="width:100%;max-width:300px;">')
-	.bindTooltip('Archway Commons', {permanent: false, direction: 'top'})
-	.addTo(searchableLayer);
-
-	var fw_elron = L.marker([74.449358, 10.26123], {icon: Residence, title: "Elron Residence"})
-	.bindPopup('<b>Elron Residence</b><br><i>Slitneck, Field Ward</i><p>The poor house of the Elron family. Agatha, Michael and Ella. </p><img src="images/slum.png" style="width:100%;max-width:300px;">')
-	.bindTooltip('Elron Residence', {permanent: false, direction: 'top'})
-	.addTo(searchableLayer);
-
-	var nw_tei = L.marker([62.815019, 18.786621], {icon: Business, title: "Tiger&#39s Eye Investigations"})
-	.bindPopup('<b>Tiger&#39s Eye Investigations</b><br><i>Trollskull Alley, North Ward</i><p>This private detective business is unremarkable on the outside, its only distinguishing mark an orange and black sign featuring a cat eye. Inside is a regal apartment dimly lit by flickering oil lamps.<br><br>It is owned by Vincent Trench, a human private investigator.<br><br>Trench can discover almost any secret in Waterdeep... for a fee.</p><img src="images/tigers_eye.png" style="width:100%;max-width:300px;">')
-	.bindTooltip('Tiger&#39s Eye Investigations', {permanent: false, direction: 'top'})
-	.addTo(searchableLayer);
-
-	var nw_bwt = L.marker([62.855146, 16.479492], {icon: Business, title: "Book Wyrm&#39s Treasure"})
-	.bindPopup('<b>Book Wyrm&#39s Treasure</b><br><i>Trollskull Alley, North Ward</i><p>The front of this bookstore is adorned with a charming sign of a gold dragon curled around a treasure hoard of books and scrolls. Inside, the shop is decorated with beautiful hardwood, and the earthy scent of old books permeates the air. It somehow seems to contain more shelves than the building should be able to hold.<br><br>The shop is managed by a short Gold Dragonborn named Rishaal the Page-Turner.</p><img src="images/book_wyrms_treasure.png" style="width:80%;max-width:300px;">')
-	.bindTooltip('Book Wyrm&#39s Treasure', {permanent: false, direction: 'top'})
-	.addTo(searchableLayer);
-
-	var dw_zhentwh = L.marker([-48.472921, 21.577148], {icon: Warehouse, title: "Maernath Storage (Zhentarim Warehouse)"})
-	.bindPopup('<b>Maernath Storage (Zhentarim Warehouse)</b><br><i>Singlewick, Dock Ward</i><p>The hideout, adnorned with a black name painted on the handle, is a ramshackle two-story warehouse. Renaer and Floon were kept when kidnapped. Crates packed with weapons, rations, boots, black uniforms, and other gear fill the warehouse.</p><img src="images/dockward.png" style="width:100%;max-width:300px;">')
-	.bindTooltip('Maernath Storage (Zhentarim Warehouse)', {permanent: false, direction: 'top'})
-	.addTo(searchableLayer);
-
-	var dw_swh = L.marker([-58.881942, -2.197266], {icon: Guildhall, title: "Shipwrights House"})
-	.bindPopup('<b>Shipwrights House</b><br><i>Sirenwalk, Dock Ward</i><p>Guildhall. Order of Master Shipwrights.</p>')
-	.bindTooltip('Shipwrights House', {permanent: false, direction: 'top'})
-	.addTo(searchableLayer);
-
-	var cw_yp = L.marker([-32.879587, 5.932617], {icon: Inn_Tavern_Festhall, title: "The Yawning Portal"})
-	.bindPopup('<b>The Yawning Portal</b><br><i>Portal Lane, Castle Ward</i><p>Inn. Built on the ruins of an ancient magical tower, the Yawning Portal gained most of its renown for being the primary open route to the Undermountain. The Portals innkeeper, Durnan, is a former adventurer of great power and renown.</p><img src="images/yawning_portal.png" style="width:100%;max-width:300px;">')
-	.bindTooltip('The Yawning Portal', {permanent: false, direction: 'top'})
-	.addTo(searchableLayer);
-
-	var sw_cassvill = L.marker([61.585492, -33.266602], {icon: Noble_Villa, title: "Cassalanter Villa"})
-	.bindPopup('<b>Cassalanter Villa</b><br><i>Xamostars Blade, Sea Ward</i><p>The family estate of the Waterdhavian noble house Cassalanter.</p><img src="images/cassalanter_villa.png" style="width:100%;max-width:300px;">')
-	.bindTooltip('Cassalanter Villa', {permanent: false, direction: 'top'})
-	.addTo(searchableLayer);
-
-	var sw_fot = L.marker([48.370848, -54.624023], {icon: Places_Streets, title: "Field of Triumph"})
-	.bindPopup('<b>Field of Triumph</b><br><i>Sea Ward</i><p>Huge open-air stadium. Site of many spectacles staged for the populace of Waterdeep.</p><img src="images/field_ot_triumph.png" style="width:100%;max-width:300px;">')
-	.bindTooltip('Field of Triumph', {permanent: false, direction: 'top'})
-	.addTo(searchableLayer);
-
-	var cw_hoih = L.marker([15.135764, 16.105957], {icon: Temple, title: "House of Inspired Hands"})
-	.bindPopup('<b>House of Inspired Hands</b><br><i>Corivaels Maze, Castle Ward</i><p>Temple. The temple of Gond in Waterdeep</p><img src="images/gond.png" style="width:100%;max-width:300px;">')
-	.bindTooltip('House of Inspired Hands', {permanent: false, direction: 'top'})
-	.addTo(searchableLayer);
-
-	var cw_castle = L.marker([-26.608174, -5.888672], {icon: City_Building, title: "Castle Waterdeep"})
-	.bindPopup('<b>Castle Waterdeep</b><br><i>Mount Waterdeep, Castle Ward</i><p>Thick-walled stronghold that broods over Castle Ward from the flanks of Mount Waterdeep. Pennants and banners are often hung and flown from its battlements to signal the arrival of diplomats or the commencement of ceremonies.</p><img src="images/castle_waterdeep.png" style="width:100%;max-width:300px;">')
-	.bindTooltip('Castle Waterdeep', {permanent: false, direction: 'top'})
-	.addTo(searchableLayer);
+	  // Add the marker to the appropriate layer group
+	  if (window['mg_' + location.type[0].toLowerCase()]) {
+		window['mg_' + location.type[0].toLowerCase()].addLayer(marker);
+	  }
+	});
 
 
 
@@ -673,20 +624,20 @@
 
 
 	// Overlay groups for different types of locations
-    var overlays = {
-	"Bases" : mg_base,
-	"City Buildings" : mg_city_building,
-	"Academies" : mg_academy,
-	"Temples" : mg_temple,
-	"Warehouses" : mg_warehouse,
-	"Residences" : mg_residence,
-	"Businesses" : mg_business,
-	"Guildhalls" : mg_guildhall,
-	"Inns, Taverns, Festhalls" : mg_tavern,
-	"Noble Villas" : mg_noble_villa,
-	"Places & Streets" : mg_places_streets,
-	"Miscellaneous" : mg_misc,
-    };
+	var overlays = {
+	  "Bases" : mg_base,
+	  "City Buildings" : mg_city_building,
+	  "Academies" : mg_academy,
+	  "Temples" : mg_temple,
+	  "Warehouses" : mg_warehouse,
+	  "Residences" : mg_residence,
+	  "Businesses" : mg_business,
+	  "Guildhalls" : mg_guildhall,
+	  "Inns, Taverns, Festhalls" : mg_tavern,
+	  "Noble Villas" : mg_noble_villa,
+	  "Places & Streets" : mg_places_streets,
+	  "Miscellaneous" : mg_misc,
+	};
 
     // Layer control for toggling overlays
     L.control.layers(null, overlays).addTo(map);
