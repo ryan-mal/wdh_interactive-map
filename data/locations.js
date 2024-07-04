@@ -41,7 +41,7 @@ var locations = [
         description: "A dangerous place filled with smugglers and criminals.",
         notableInfo: "",
         isPolygon: true
-    }
+    },
 
     // Add all other locations here...
 ];

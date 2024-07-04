@@ -52,17 +52,23 @@
 }
 
 .leaflet-control-search .search-cancel {
-  background: url('images/search-icon.png') no-repeat;
-  background-position: center -42px;
-  background-size: 20px;
-  width: 30px;
-  height: 30px;
-  position: absolute;
-  top: 0;
-  right: 30px;
-  display: none;
-  cursor: pointer;
-  transition: opacity 0.3s ease;
+    background: url('images/search-icon.png') no-repeat;
+    background-position: center -43px;
+    background-size: 20px;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 0;
+    right: 30px;
+    display: none;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    text-indent: -9999px; /* Hide text content */
+    overflow: hidden; /* Ensure text is hidden */
+}
+
+.leaflet-control-search .search-cancel:before {
+    display: none; /* Hide the pseudo-element that might be showing the '⊗' */
 }
 
 .leaflet-control-search.search-exp .search-cancel {
