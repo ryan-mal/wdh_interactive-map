@@ -353,28 +353,57 @@
 
 	// Search control
 	var searchControl = new L.Control.Search({
-		layer: searchableLayer,
-		propertyName: 'title',
-		marker: false,
-		moveToLocation: function(latlng, title, map) {
-			// Loop through all overlay groups to find the marker
-			for (var groupName in overlays) {
-				var group = overlays[groupName];
-				var marker = group.getLayers().find(layer => layer.options.title === title);
-
-				// If marker is found within this group
-				if (marker) {
-					if (!map.hasLayer(group)) {
-						map.addLayer(group); // Enable the group if it's not already active
-					}
-					map.setView(latlng, 17); // Set view and zoom level
-					marker.openPopup(); // Open the popup for the marker
-					break; // Stop the loop as we found our marker
-				}
-			}
-		}
+	  layer: searchableLayer,
+	  initial: false,
+	  collapsed: true,
+	  position: 'topleft',
+	  propertyName: 'title', // the property in your data that should be searched
+	  textPlaceholder: 'Search...',
+	  moveToLocation: function(latlng, title, map) {
+		map.setView(latlng, 17); // Zoom level can be adjusted
+	  },
+	  autoCollapse: true,
+	  autoType: false,
+	  minLength: 2,
+	  hideMarkerOnCollapse: true,
+	  marker: {
+		icon: new L.Icon.Default(),
+		animated: true,
+		clickable: true
+	  },
+	  tooltipLimit: 10,
 	});
+
+	// Event listener for when a location is found
+	searchControl.on('search:locationfound', function(e) {
+	  if (e.layer._popup) {
+		e.layer.openPopup();
+	  }
+	});
+
 	map.addControl(searchControl);
+
+	// Custom CSS injection for search control
+	var style = document.createElement('style');
+	style.textContent = `
+	  .leaflet-control-search .search-input {
+		font-family: 'Courier New', monospace;
+		color: #e0e0e0;
+		background: rgba(42, 42, 42, 0.9);
+	  }
+	  .leaflet-control-search .search-tooltip {
+		background: rgba(42, 42, 42, 0.9);
+	  }
+	  .leaflet-control-search .search-tip {
+		color: #e0e0e0;
+	  }
+	  .leaflet-control-search .search-tip:hover,
+	  .leaflet-control-search .search-tip-select {
+		background: rgba(255, 152, 0, 0.2);
+		color: #ff9800;
+	  }
+	`;
+	document.head.appendChild(style);
 	
 	function openPopupFromHash() {
 		var hash = decodeURIComponent(window.location.hash.substr(1));
