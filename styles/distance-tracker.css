@@ -1,0 +1,55 @@
+#distance-control {
+    position: absolute;
+    top: 80px;
+    right: 10px;
+    z-index: 1000;
+    background: #2a2a2a;
+    color: #e0e0e0;
+    padding: 15px;
+    border-radius: 0;
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.8);
+    font-family: "Courier New", Courier, monospace;
+    border: 1px solid #4a4a4a;
+}
+
+#distance-control h4 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 1px solid #4a4a4a;
+    padding-bottom: 5px;
+}
+
+#distance-control button {
+    margin-right: 5px;
+    background: #4a4a4a;
+    color: #e0e0e0;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+#distance-control button:hover {
+    background: #5a5a5a;
+}
+
+#distance-result {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+/* Custom styles for the red string line */
+.noir-string-line {
+    stroke-dasharray: 5, 10;
+    animation: move-line 1s linear infinite;
+    filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
+}
+
+@keyframes move-line {
+    to {
+        stroke-dashoffset: -15;
+    }
+}

@@ -7,11 +7,13 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="styles/leaflet.css">
   <link rel="stylesheet" href="styles/updated-leaflet-search.min.css">
+  <link rel="stylesheet" href="styles/distance-tracker.css">
 
   <!-- JavaScript Libraries -->
   <script src="data/locations.js"></script>
   <script src="scripts/leaflet.js"></script>
   <script src="scripts/leaflet-search.min.js"></script>
+  <script src="scripts/distance-tracker.js"></script>
 </head>
 
 <body style="height: 100%; margin: 0;">
@@ -433,6 +435,16 @@ function openPopupFromHash() {
 
 	map.whenReady(openPopupFromHash);
 	window.addEventListener('hashchange', openPopupFromHash);
-  </script>
+ 
+ 
+ </script>
+  
+	<div id="distance-control" class="leaflet-control leaflet-bar" style="background: white; padding: 10px; margin: 10px;">
+		<h4>Distance Calculator</h4>
+		<button id="start-distance">Start Measuring</button>
+		<button id="clear-distance" style="display: none;">Clear</button>
+		<p id="distance-result"></p>
+	</div>
+  
 </body>
 </html>
