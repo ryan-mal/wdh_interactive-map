@@ -285,6 +285,17 @@
 				}
 				
 			});
+			
+			var hiddenMarker = L.marker(location.center, {
+				opacity: 0,
+				title: location.name
+			}).addTo(searchableLayer);
+			
+			window.markerHashes[hash] = {
+				polygon: polygon,
+				marker: hiddenMarker
+			};
+			
 			polygon.on('popupopen', function() {
 				window.history.replaceState(null, null, '#' + hash);
 			});
@@ -360,12 +371,23 @@ var searchControl = new L.Control.Search({
 	propertyName: 'title',
 	textPlaceholder: 'Search...',
 	moveToLocation: function(latlng, title, map) {
-		map.setView(latlng, 17);
-		var foundMarker = searchableLayer.getLayers().find(function(layer) {
+		var foundItem = searchableLayer.getLayers().find(function(layer) {
 			return layer.options.title === title;
 		});
-		if (foundMarker) {
-			foundMarker.openPopup();
+		if (foundItem) {
+			if (foundItem.getLatLng) {
+				map.setView(foundItem.getLatLng(), 17);
+			} else {
+				map.fitBounds(foundItem.getBounds());
+			}
+			var hashItem = Object.values(window.markerHashes).find(function(item) {
+				return item.polygon && item.polygon.options.title === title || item.options && item.options.title === title;
+			});
+			if (hashItem && hashItem.polygon) {
+				hashItem.polygon.openPopup();
+			} else if (hashItem) {
+				hashItem.openPopup();
+			}
 		}
 	},
 	autoCollapse: true, // Change this to false to keep the search results open
@@ -392,14 +414,22 @@ map.addControl(searchControl);
 
 
 	
-	function openPopupFromHash() {
-		var hash = decodeURIComponent(window.location.hash.substr(1));
-		if (hash && window.markerHashes[hash]) {
-			var marker = window.markerHashes[hash];
-			marker.openPopup();
-			map.panTo(marker.getLatLng ? marker.getLatLng() : marker.getBounds().getCenter());
+function openPopupFromHash() {
+	var hash = decodeURIComponent(window.location.hash.substr(1));
+	if (hash && window.markerHashes[hash]) {
+		var item = window.markerHashes[hash];
+		if (item.polygon) {
+			item.polygon.openPopup();
+			map.fitBounds(item.polygon.getBounds());
+		} else if (item.marker) {
+			item.marker.openPopup();
+			map.setView(item.marker.getLatLng(), 17);
+		} else {
+			item.openPopup();
+			map.panTo(item.getLatLng ? item.getLatLng() : item.getBounds().getCenter());
 		}
 	}
+}
 
 	map.whenReady(openPopupFromHash);
 	window.addEventListener('hashchange', openPopupFromHash);
