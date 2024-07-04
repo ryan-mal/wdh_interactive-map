@@ -15,7 +15,6 @@
   <script src="data/locations.js"></script>
   <script src="scripts/leaflet.js"></script>
   <script src="scripts/leaflet-search.min.js"></script>
-  
 </head>
 
 
@@ -365,7 +364,17 @@
 
 	// Create location markers
 	locations.forEach(function(location) {
-	  var popupContent = location.description + 
+	  // Create the formatted header using the location name and ward
+	  // var header = '<b>' + location.name + '</b><br><i>' + location.area + ', ' + location.ward + '</i><p>';
+	  var header = '<b>' + location.name + '</b><br>';
+	  if (location.area) {
+		header += '<i>' + location.area + ', ' + location.ward + '</i><p>';
+	  } else {
+		header += '<i>' + location.ward + '</i><p>';
+	  }
+  
+	  // Concatenate the header with the existing description
+	  var popupContent = header + location.description + 
 						 '<br><img src="' + location.image + '" style="width:100%;max-width:300px;">';
 
 	  var iconName = location.type[0].replace(/ /g, '_');
@@ -384,6 +393,7 @@
 		}
 	  });
 	});
+
 
 
 	// Overlay groups for different types of locations
