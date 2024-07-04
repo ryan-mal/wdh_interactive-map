@@ -2,7 +2,7 @@ var locations = [
     {
         name: "Trollskull Manor",
         ward: "North Ward",
-        type: ["Base", "Residence", "Inn, Tavern, Festhall"],
+        type: ["Base", "Residence", "Inn_Tavern_Festhall"],
         coordinates: [62.714462, 21.291504],
         image: "images/Trollskull_Manor.png",
         description: "<b>Trollskull Manor</b><br><i>Trollskull Alley, North Ward</i><p>Four stories tall and boasting balconies, a turret, and five chimneys, this Manorial House and Tavern was once one of the grandest estates in Trollskull Alley. It is now nothing more than a crumbling memory.",
