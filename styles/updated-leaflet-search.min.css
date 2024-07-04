@@ -34,7 +34,8 @@
 }
 
 .leaflet-control-search .search-button {
-  background: url('scripts/images/search-icon.png') center no-repeat;
+  background: url('images/search-icon2.png') no-repeat;
+  background-position: center 3px;
   background-size: 20px;
   opacity: 0.7;
   transition: opacity 0.3s ease;
@@ -51,13 +52,17 @@
 }
 
 .leaflet-control-search .search-cancel {
-  color: #e0e0e0;
-  font-size: 18px;
-  transition: color 0.3s ease;
+  background: url('images/search-icon.png') no-repeat;
+  background-position: center -42px;
+  background-size: 20px;
+  width: 30px;
+  height: 30px;
   position: absolute;
   top: 0;
   right: 30px;
   display: none;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
 }
 
 .leaflet-control-search.search-exp .search-cancel {
@@ -65,7 +70,7 @@
 }
 
 .leaflet-control-search .search-cancel:hover {
-  color: #ff9800;
+  opacity: 0.8;
 }
 
 /* Search results styling */
