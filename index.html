@@ -148,138 +148,43 @@
 	map.addControl(new HideShowControl({ position: 'topright' }));
 
 	
-    // Define Icons for different locations
-    var Base = L.icon({
-		iconUrl:       'icons/base.png',
-		iconRetinaUrl: 'icons/base.png',
-		shadowUrl:     'scripts/images/marker-shadow.png',
-		iconSize:    [25, 41],
-		iconAnchor:  [12, 41],
-		popupAnchor: [1, -34],
-		tooltipAnchor: [2, -28],
-		shadowSize:  [41, 41]
-	});
-	
-    var Academy = L.icon({
-		iconUrl:       'icons/academy.png',
-		iconRetinaUrl: 'icons/academy.png',
-		shadowUrl:     'scripts/images/marker-shadow.png',
-		iconSize:    [25, 41],
-		iconAnchor:  [12, 41],
-		popupAnchor: [1, -34],
-		tooltipAnchor: [2, -28],
-		shadowSize:  [41, 41]
-	});
-	
-	var Business = L.icon({
-		iconUrl:       'icons/businesses.png',
-		iconRetinaUrl: 'icons/businesses.png',
-		shadowUrl:     'scripts/images/marker-shadow.png',
-		iconSize:    [25, 41],
-		iconAnchor:  [12, 41],
-		popupAnchor: [1, -34],
-		tooltipAnchor: [2, -28],
-		shadowSize:  [41, 41]
-	});
-	
-	var City_Building = L.icon({
-		iconUrl:       'icons/city_building.png',
-		iconRetinaUrl: 'icons/city_building.png',
-		shadowUrl:     'scripts/images/marker-shadow.png',
-		iconSize:    [25, 41],
-		iconAnchor:  [12, 41],
-		popupAnchor: [1, -34],
-		tooltipAnchor: [2, -28],
-		shadowSize:  [41, 41]
-	});
-	
-	var Guildhall = L.icon({
-		iconUrl:       'icons/guildhall.png',
-		iconRetinaUrl: 'icons/guildhall.png',
-		shadowUrl:     'scripts/images/marker-shadow.png',
-		iconSize:    [25, 41],
-		iconAnchor:  [12, 41],
-		popupAnchor: [1, -34],
-		tooltipAnchor: [2, -28],
-		shadowSize:  [41, 41]
-	});
-	
-	var Noble_Villa = L.icon({
-		iconUrl:       'icons/noble_villa.png',
-		iconRetinaUrl: 'icons/noble_villa.png',
-		shadowUrl:     'scripts/images/marker-shadow.png',
-		iconSize:    [25, 41],
-		iconAnchor:  [12, 41],
-		popupAnchor: [1, -34],
-		tooltipAnchor: [2, -28],
-		shadowSize:  [41, 41]
-	});
-	
-	var Residence = L.icon({
-		iconUrl:       'icons/residence.png',
-		iconRetinaUrl: 'icons/residence.png',
-		shadowUrl:     'scripts/images/marker-shadow.png',
-		iconSize:    [25, 41],
-		iconAnchor:  [12, 41],
-		popupAnchor: [1, -34],
-		tooltipAnchor: [2, -28],
-		shadowSize:  [41, 41]
-	});
-	
-	var Places_Streets = L.icon({
-		iconUrl:       'icons/streets.png',
-		iconRetinaUrl: 'icons/streets.png',
-		shadowUrl:     'scripts/images/marker-shadow.png',
-		iconSize:    [25, 41],
-		iconAnchor:  [12, 41],
-		popupAnchor: [1, -34],
-		tooltipAnchor: [2, -28],
-		shadowSize:  [41, 41]
-	});
-	
-	var Inn_Tavern_Festhall = L.icon({
-		iconUrl:       'icons/tavern.png',
-		iconRetinaUrl: 'icons/tavern.png',
-		shadowUrl:     'scripts/images/marker-shadow.png',
-		iconSize:    [25, 41],
-		iconAnchor:  [12, 41],
-		popupAnchor: [1, -34],
-		tooltipAnchor: [2, -28],
-		shadowSize:  [41, 41]
-	});
-	
-	var Miscellaneous = L.icon({
-		iconUrl:       'icons/miscellaneous.png',
-		iconRetinaUrl: 'icons/miscellaneous.png',
-		shadowUrl:     'scripts/images/marker-shadow.png',
-		iconSize:    [25, 41],
-		iconAnchor:  [12, 41],
-		popupAnchor: [1, -34],
-		tooltipAnchor: [2, -28],
-		shadowSize:  [41, 41]
-	});
-	
-	var Temple = L.icon({
-		iconUrl:       'icons/temple.png',
-		iconRetinaUrl: 'icons/temple.png',
-		shadowUrl:     'scripts/images/marker-shadow.png',
-		iconSize:    [25, 41],
-		iconAnchor:  [12, 41],
-		popupAnchor: [1, -34],
-		tooltipAnchor: [2, -28],
-		shadowSize:  [41, 41]
-	});
-	
-	var Warehouse = L.icon({
-		iconUrl:       'icons/warehouse.png',
-		iconRetinaUrl: 'icons/warehouse.png',
-		shadowUrl:     'scripts/images/marker-shadow.png',
-		iconSize:    [25, 41],
-		iconAnchor:  [12, 41],
-		popupAnchor: [1, -34],
-		tooltipAnchor: [2, -28],
-		shadowSize:  [41, 41]
-	});
+	// Define a function to create icons
+	function createIcon(iconName) {
+		return L.icon({
+			iconUrl: `icons/${iconName}.png`,
+			iconRetinaUrl: `icons/${iconName}.png`,
+			shadowUrl: 'scripts/images/marker-shadow.png',
+			iconSize: [25, 41],
+			iconAnchor: [12, 41],
+			popupAnchor: [1, -34],
+			tooltipAnchor: [2, -28],
+			shadowSize: [41, 41]
+		});
+	}
+
+	// Define icon configurations
+	const iconConfigs = {
+		Base: 'base',
+		Academy: 'academy',
+		Business: 'businesses',
+		City_Building: 'city_building',
+		Guildhall: 'guildhall',
+		Noble_Villa: 'noble_villa',
+		Residence: 'residence',
+		Places_Streets: 'streets',
+		Inn_Tavern_Festhall: 'tavern',
+		Miscellaneous: 'miscellaneous',
+		Temple: 'temple',
+		Warehouse: 'warehouse'
+	};
+
+	// Generate icons
+	const icons = {};
+	for (const [iconName, fileName] of Object.entries(iconConfigs)) {
+		icons[iconName] = createIcon(fileName);
+	}
+
+
 	
 	
 	// Draggable marker for coordinate finding. Comment this out when  not in use
@@ -358,7 +263,7 @@ locations.forEach(function(location) {
     var polygon = L.polygon(location.coordinates, {
       color: 'red',
       title: location.name,
-      icon: window.Places_Streets, // Assuming the default icon for polygons is Places_Streets
+      icon: icons.Places_Streets, // Assuming the default icon for polygons is Places_Streets
       opacity: 0.3
     })
     .bindPopup(popupContent)
@@ -374,13 +279,13 @@ locations.forEach(function(location) {
     });
   } else {
     // If the location is not a polygon, create a marker
-    var iconName = location.type[0].replace(/ /g, '_');
-    var icon = window[iconName] || Miscellaneous; // Use Miscellaneous as default if icon not found
+	var iconName = location.type[0].replace(/ /g, '_');
+	var icon = icons[iconName] || icons.Miscellaneous; // Use Miscellaneous as default if icon not found
 
-    var marker = L.marker(location.coordinates, {icon: icon, title: location.name})
-      .bindPopup(popupContent)
-      .bindTooltip(location.name, {permanent: false, direction: 'top'})
-      .addTo(searchableLayer);
+	var marker = L.marker(location.coordinates, {icon: icon, title: location.name})
+	  .bindPopup(popupContent)
+	  .bindTooltip(location.name, {permanent: false, direction: 'top'})
+	  .addTo(searchableLayer);
 
     // Add the marker to all appropriate layer groups
     location.type.forEach(function(type) {
