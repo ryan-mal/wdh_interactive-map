@@ -44,7 +44,6 @@ function onMapClick(e) {
 		updateDistance();
 	}
 }
-
 function addThumbTack(latlng) {
 	const thumbtack = L.divIcon({
 		className: 'thumbtack',
@@ -99,12 +98,11 @@ function updateThumbTacks() {
 		L.DomUtil.setPosition(layer.getElement(), pos);
 	});
 }
-
 function disableMapInteractions() {
 	map.eachLayer(function (layer) {
 		if (layer instanceof L.Marker || layer instanceof L.Polygon) {
 			layer.options.oldInteractive = layer.options.interactive;
-			layer.setInteractive(false);
+			layer.setInteractive(true); // Keep all layers interactive
 			if (layer.closePopup) {
 				layer.closePopup();
 			}
@@ -114,14 +112,13 @@ function disableMapInteractions() {
 				layer.unbindPopup();
 			}
 
-			// Add click event listener to polygons for distance measurement
-			if (layer instanceof L.Polygon) {
-				layer.on('click', onMapClick);
-			}
+			// Remove existing click listeners
+			layer.off('click', onLayerClick);
+			// Add new click event listener for distance measurement
+			layer.on('click', onLayerClick);
 		}
 	});
 }
-
 function enableMapInteractions() {
 	map.eachLayer(function (layer) {
 		if (layer instanceof L.Marker || layer instanceof L.Polygon) {
@@ -135,13 +132,27 @@ function enableMapInteractions() {
 				delete layer.options.oldPopup;
 			}
 
-			// Remove click event listener from polygons
-			if (layer instanceof L.Polygon) {
-				layer.off('click', onMapClick);
-			}
+			// Remove click event listener from polygons and markers
+			layer.off('click', onLayerClick);
 		}
 	});
 }
+
+function onLayerClick(e) {
+	if (distanceMode) {
+		let latlng;
+		if (this instanceof L.Marker) {
+			latlng = this.getLatLng();
+		} else {
+			latlng = e.latlng;
+		}
+		addThumbTack(latlng);
+		distancePoints.push(latlng);
+		updateDistance();
+		L.DomEvent.stopPropagation(e); // Prevent the click from propagating to the map
+	}
+}
+
 
 document.addEventListener('DOMContentLoaded', (event) => {
 	document.getElementById('start-distance').addEventListener('click', startDistanceMode);

@@ -503,16 +503,27 @@ function openPopupFromHash() {
             this.openPopup();
         }
     }
-
     // Update all markers and polygons to use these new click handlers
     searchableLayer.eachLayer(function (layer) {
         layer.off('click');
-        layer.on('click', onMarkerClick);
+        layer.on('click', function (e) {
+            if (window.distanceMode) {
+                onLayerClick.call(this, e);
+            } else {
+                this.openPopup();
+            }
+        });
     });
 
     wards.forEach(function (ward) {
         ward.polygon.off('click');
-        ward.polygon.on('click', onWardClick);
+        ward.polygon.on('click', function (e) {
+            if (window.distanceMode) {
+                onLayerClick.call(this, e);
+            } else {
+                this.openPopup();
+            }
+        });
     });
   </script>
 
