@@ -101,12 +101,17 @@ function updateThumbTacks() {
 }
 
 function disableMapInteractions() {
-	map.eachLayer(function(layer) {
+	map.eachLayer(function (layer) {
 		if (layer instanceof L.Marker || layer instanceof L.Polygon) {
 			layer.options.oldInteractive = layer.options.interactive;
 			layer.setInteractive(false);
 			if (layer.closePopup) {
 				layer.closePopup();
+			}
+			// Disable popups
+			if (layer.unbindPopup) {
+				layer.options.oldPopup = layer.getPopup();
+				layer.unbindPopup();
 			}
 
 			// Add click event listener to polygons for distance measurement
@@ -118,11 +123,16 @@ function disableMapInteractions() {
 }
 
 function enableMapInteractions() {
-	map.eachLayer(function(layer) {
+	map.eachLayer(function (layer) {
 		if (layer instanceof L.Marker || layer instanceof L.Polygon) {
 			if (layer.options.hasOwnProperty('oldInteractive')) {
 				layer.setInteractive(layer.options.oldInteractive);
 				delete layer.options.oldInteractive;
+			}
+			// Re-enable popups
+			if (layer.options.hasOwnProperty('oldPopup')) {
+				layer.bindPopup(layer.options.oldPopup);
+				delete layer.options.oldPopup;
 			}
 
 			// Remove click event listener from polygons

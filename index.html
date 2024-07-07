@@ -505,15 +505,15 @@ function openPopupFromHash() {
     }
 
     // Update all markers and polygons to use these new click handlers
-    searchableLayer.eachLayer(function(layer) {
+    searchableLayer.eachLayer(function (layer) {
         layer.off('click');
         layer.on('click', onMarkerClick);
     });
 
-	wards.forEach(function(ward) {
-		ward.off('click', onWardClick);
-		ward.on('click', onWardClick);
-	});
+    wards.forEach(function (ward) {
+        ward.polygon.off('click');
+        ward.polygon.on('click', onWardClick);
+    });
   </script>
 
   <div id="distance-control" class="leaflet-control leaflet-bar">
